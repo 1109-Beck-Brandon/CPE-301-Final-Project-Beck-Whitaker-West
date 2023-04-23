@@ -26,6 +26,10 @@ int mSpeed = 90;
 // variable to store the Water Sensor value
 int value = 0; 
 
+void executeStepperMotor();
+void executeWaterSensor();
+void executeDCMotor();
+void executeHumiditySensor();
 
 
 
@@ -45,23 +49,15 @@ void setup() {
 
 void loop() {
 
-  //Execution code for DC Motor
-  digitalWrite(dir1, LOW);
-  digitalWrite(dir2, HIGH);
-  analogWrite(speedPin, 255);
-  delay(25);
-  analogWrite(speedPin, mSpeed);
-  delay(5000);
+  executeStepperMotor();
+  executeWaterSensor();
+  executeDCMotor();
+  executeHumiditySensor();
 
-  //Execution code for Humidity Sensor
-  int chk = DHT.read11(DHT11_PIN);
-  Serial.print("Temperature = ");
-  Serial.println(DHT.temperature);    
-  Serial.print("Humidity = ");
-  Serial.println(DHT.humidity);
-  delay(1000);
+}
 
-  //Execution for Stepper Motor
+void executeStepperMotor(){
+ //Execution for Stepper Motor
   // Rotate CW slowly at 5 RPM
   myStepper.setSpeed(5);
   myStepper.step(stepsPerRevolution);
@@ -71,6 +67,9 @@ void loop() {
   myStepper.step(-stepsPerRevolution);
   delay(1000);
 
+}
+
+void executeWaterSensor(){
   //Execution for Water sensor
   digitalWrite (POWER_PIN, HIGH); // turn the sensor ON
   delay(10); // wait 10 milliseconds
@@ -78,5 +77,31 @@ void loop() {
   digitalWrite (POWER_PIN, LOW); // turn the sensor OFF
   Serial.print("Sensor value: " );
   Serial.println (value);
+  delay(1000);
+}
+
+void executeDCMotor(){
+ //Execution code for DC Motor
+  digitalWrite(dir1, LOW);
+  digitalWrite(dir2, HIGH);
+  analogWrite(speedPin, 255);
+  delay(25);
+  analogWrite(speedPin, mSpeed);
+  delay(5000);//Execution code for DC Motor
+  digitalWrite(dir1, LOW);
+  digitalWrite(dir2, HIGH);
+  analogWrite(speedPin, 255);
+  delay(25);
+  analogWrite(speedPin, mSpeed);
+  delay(5000);
+}
+
+void executeHumiditySensor(){
+  //Execution code for Humidity Sensor
+  int chk = DHT.read11(DHT11_PIN);
+  Serial.print("Temperature = ");
+  Serial.println(DHT.temperature);    
+  Serial.print("Humidity = ");
+  Serial.println(DHT.humidity);
   delay(1000);
 }
