@@ -125,6 +125,13 @@ void executeWaterSensor(){
 
   convertNumAndPrint(value);
   delay(1000); 
+ 
+  unsigned char alert[25] = {'W','A', 'R','N','I','N','G',':',' ','W','A','T','E','R',' ','L','E','V','E','L',' ','L','O','W','\n'};
+  if(value < 100) {
+    for(int i = 0; i < 25; i++){
+     U0putchar(alert[i]);
+    }
+  }
 }
 
 void executeDCMotor(){
