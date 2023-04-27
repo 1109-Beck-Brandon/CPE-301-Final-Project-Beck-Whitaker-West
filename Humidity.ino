@@ -1,9 +1,17 @@
+//Humidity code that displays to the LCD
+
 #include <dht.h> //install the DHTLib library
+#include <LiquidCrystal.h> //Add the LCD Library
+
 dht DHT;
 #define DHT11_PIN 7
 
 #define RDA 0x80
 #define TBE 0x20
+
+int seconds = 0;
+
+LiquidCrystal lcd_1(23, 25, 27, 29, 31, 33);
 
 //Pointer Initializations:
 volatile unsigned char *myUCSR0A = (unsigned char *)0x00C0;
@@ -14,7 +22,9 @@ volatile unsigned char *myUDR0   = (unsigned char *)0x00C6;
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(9600);
+  U0init(9600);
+
+  lcd_1.begin(16,2);
 }
 
 void loop() {
@@ -34,6 +44,14 @@ void loop() {
   }
   
   convertNumAndPrint(DHT.humidity);
+  delay(1000);
+
+  lcd_1.setCursor(0, 0);
+  lcd_1.print("Temp: ");
+  lcd_1.print(DHT.temperature);
+  lcd_1.setCursor(0, 1);
+  lcd_1.print("Humidity: ");
+  lcd_1.print(DHT.humidity);
   delay(1000);
 }
 
