@@ -147,7 +147,6 @@ void executeDCMotor(){
 void executeHumiditySensor(){
   //Execution code for Humidity Sensor
   int chk = DHT.read11(DHT11_PIN);
-  Serial.print("Temperature = ");
   unsigned char bString[14] = {'T', 'e', 'm', 'p', 'e', 'r', 'a', 't', 'u', 'r', 'e', ' ', '=', ' '};
    for(int i = 0; i < 14; i++){
      U0putchar(bString[i]);
