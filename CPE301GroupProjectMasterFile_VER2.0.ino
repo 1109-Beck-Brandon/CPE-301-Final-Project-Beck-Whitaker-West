@@ -44,6 +44,10 @@ volatile unsigned char *portDDRG = (unsigned char *) 0x33;
 volatile unsigned char *portG =    (unsigned char *) 0x34;
 volatile unsigned char *pinG =     (unsigned char *) 0x32;
 
+volatile unsigned char *portDDRA = (unsigned char *) 0x21;
+volatile unsigned char *portA =    (unsigned char *) 0x22;
+volatile unsigned char *pinA =     (unsigned char *) 0x20;
+
 
 
 //Global Variables for DHT Library
@@ -100,13 +104,18 @@ void setup() {
   *portH &= ~(0x01 << 3);
 
   //Set button as input.
-  pinMode(13, INPUT);
+  //pinMode(13, INPUT);
+  *portDDRB |= (0x01 << 7);
 
   //Set LEDs as OUTPUT.
-  pinMode(22, OUTPUT);
-  pinMode(24, OUTPUT);
-  pinMode(26, OUTPUT);
-  pinMode(28, OUTPUT);
+  //pinMode(22, OUTPUT);
+  *portDDRA |= (0x01 << 0); 
+  //pinMode(24, OUTPUT);
+  *portDDRA |= (0x01 << 2); 
+  //pinMode(26, OUTPUT);
+  *portDDRA |= (0x01 << 4); 
+  //pinMode(28, OUTPUT);
+  *portDDRA |= (0x01 << 6); 
 
 }
 
@@ -149,7 +158,7 @@ void loop() {
 void monitorButton(){
 
   char buttonInput = digitalRead(13);
-  if(buttonInput == HIGH){
+  if(buttonInput == (0x01 << 7);){
     buttonState = !buttonState;
 
     if(buttonState == 1){
@@ -171,10 +180,14 @@ void errorState(){
   executeHumiditySensor();
 
   //Turn on Red LED
-  digitalWrite(22, HIGH);
-  digitalWrite(24, LOW);
-  digitalWrite(26, LOW);
-  digitalWrite(28, LOW);
+  //digitalWrite(22, HIGH);
+  *portA |= (0x01 << 0); 
+  //digitalWrite(24, LOW);
+  *portA &=  ~(0x01 << 2); 
+  //digitalWrite(26, LOW);
+  *portA &=  ~(0x01 << 4); 
+  //digitalWrite(28, LOW);
+  *portA &=  ~(0x01 << 6); 
 
   Serial.println("In the error state.");
 }
@@ -185,10 +198,14 @@ void idleState(){
 
 
   //Turn on Green LED
-  digitalWrite(22, LOW);
-  digitalWrite(24, HIGH);
-  digitalWrite(26, LOW);
-  digitalWrite(28, LOW);
+  //digitalWrite(22, LOW);
+  *portA &=  ~(0x01 << 0); 
+  //digitalWrite(24, HIGH);
+  *portA |= (0x01 << 2); 
+  //digitalWrite(26, LOW);
+  *portA &=  ~(0x01 << 4); 
+  //digitalWrite(28, LOW);
+  *portA &=  ~(0x01 << 6); 
 
   Serial.println("In the idle state.");
   }
@@ -204,10 +221,14 @@ void runningState(){
   Serial.println("In the running state.");
 
   //Turn on Blue LED
-  digitalWrite(22, LOW);
-  digitalWrite(24, LOW);
-  digitalWrite(26, HIGH);
-  digitalWrite(28, LOW);
+  //digitalWrite(22, LOW);
+  *portA &=  ~(0x01 << 0); 
+  //digitalWrite(24, LOW);
+  *portA &=  ~(0x01 << 2);
+  //digitalWrite(26, HIGH);
+  *portA |= (0x01 << 4); 
+  //digitalWrite(28, LOW);
+  *portA &=  ~(0x01 << 6); 
 
 }
 
@@ -217,10 +238,14 @@ void disabledState(){
 
 
   //Turn on Yellow LED
-  digitalWrite(22, LOW);
-  digitalWrite(24, LOW);
-  digitalWrite(26, LOW);
-  digitalWrite(28, HIGH);
+  //digitalWrite(22, LOW);
+  *portA &=  ~(0x01 << 0); 
+  //digitalWrite(24, LOW);
+  *portA &=  ~(0x01 << 2);
+  //digitalWrite(26, LOW);
+  *portA &=  ~(0x01 << 4); 
+  //digitalWrite(28, HIGH);
+  *portA |= (0x01 << 6); 
 
   Serial.println("In the disabled state.");
 }
