@@ -7,6 +7,7 @@
 
 #define DHT11_PIN 7 //DHT Pin
 #define POWER_PIN 6 //Water Sensor Power Pin
+#define SIGNAL_PIN A0 //Vent Control Signal Pin for Stepper Motor
 #define SIGNAL_PIN A5 //Water Sensor Analog Signal Pin
 #define RDA 0x80
 #define TBE 0x20
@@ -58,6 +59,9 @@ const int stepsPerRevolution = 2038;
 // Creates an instance of stepper class
 // Pins entered in sequence IN1-IN3-IN2-IN4 for proper step sequence
 Stepper myStepper = Stepper(stepsPerRevolution, 8, 10, 9, 11);
+
+//Create the variable for the potentiometer reading
+int sensorValue = 0;
 
 LiquidCrystal lcd_1(23, 25, 27, 29, 31, 33);
 
@@ -258,14 +262,19 @@ void disabledState(){
 
 void executeStepperMotor(){
  //Execution for Stepper Motor
-  // Rotate CW slowly at 5 RPM
-  myStepper.setSpeed(5);
-  myStepper.step(stepsPerRevolution);
-  delay(1000);
-  // Rotate CCW quickly at 10 RPM
-  myStepper.setSpeed(10);
-  myStepper.step(-stepsPerRevolution);
-  delay(1000);
+  // read the value from the sensor
+  sensorValue = analogRead(A0);
+  
+  if(sensorValue <= 50) {
+    // Rotate CW slowly at 5 RPM
+    myStepper.setSpeed(10);
+    myStepper.step(stepsPerRevolution);
+  }
+  else if(sensorValue >= 1000) {
+    //Rotate CCW quickly at 10 RPM
+    myStepper.setSpeed(10);
+    myStepper.step(-stepsPerRevolution);
+  }
 
 }
 
