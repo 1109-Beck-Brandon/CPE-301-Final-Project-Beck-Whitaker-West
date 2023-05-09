@@ -79,9 +79,16 @@ int speedPin = 5;
 int dir1 = 4;
 int dir2 = 3;
 int mSpeed = 90;
-bool  buttonState = 0;
 int progState = 0;
-char buttonInput;
+const int buttonPin = 13; // connect the button to digital pin 2
+const int ledPin = A14; 
+const int ledPin2 = A12;  // connect an LED to digital pin 13
+
+int buttonState = 0;
+int ledState = LOW;
+int prevButtonState = LOW;
+
+
 
 // variable to store the Water Sensor value
 int value = 0;
@@ -98,6 +105,10 @@ void setup() {
     Serial.begin(9600);
     adc_init();
     lcd_1.begin(16,2);
+ 
+   pinMode(buttonPin, INPUT);
+   pinMode(ledPin, OUTPUT);
+   pinMode(ledPin2, OUTPUT);
 
     // Initialize the RTC module
     rtc.begin();
@@ -180,22 +191,21 @@ void loop() {
 
 void monitorButton(){
 
-  char buttonInput = digitalRead(13);
-  if(buttonInput == (0x01 << 7)){
-    buttonState = !buttonState;
+ // Read the state of the button
+  buttonState = digitalRead(buttonPin);
 
-    if(buttonState == 1){
-    progState = 2;
-    printRTC();
-    }
-
-    if(buttonState == 0){
-    progState = 0;
-    printRTC();
-    }
-
-    delay(5000);  
+  // Check if the button has been pressed
+  if (buttonState == HIGH && prevButtonState == LOW) {
+    // Toggle the state of the LED
+    ledState = !ledState;
   }
+
+  // Update the LED state
+  digitalWrite(ledPin, ledState);
+  digitalWrite(ledPin2, !ledState);
+
+  // Update the previous button state
+  prevButtonState = buttonState;
 
 }
 
