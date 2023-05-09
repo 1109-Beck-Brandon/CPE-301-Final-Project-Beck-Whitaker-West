@@ -107,7 +107,10 @@ void setup() {
       for(int i = 0; i < 18; i++){
        U0putchar(rtcString[i]);
       }
+    // Uncomment the following line to set the RTC to the date and time this sketch was compiled
+    //rtc.adjust(DateTime(2023,5,8,7,22));
     }
+    
      
 
   //Setup code for DC Motor
@@ -531,13 +534,13 @@ void printRTC(){
   Serial.print('/');
   Serial.print(now.month());
   Serial.print('/');
-  Serial.print(now.day()-1);
+  Serial.print(now.day());
   Serial.print(' ');
-  Serial.print(now.hour()-3);
+  Serial.print(now.hour());
   Serial.print(':');
-  Serial.print(now.minute()-4);
+  Serial.print(now.minute());
   Serial.print(':');
-  Serial.println(now.second()+17);
+  Serial.println(now.second());
 
   // Wait for a second before printing again
   delay(1000);
