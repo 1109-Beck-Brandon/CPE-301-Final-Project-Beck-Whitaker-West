@@ -215,7 +215,7 @@ void errorState(){
   *portA &=  ~(0x01 << 6); 
 
   //Serial.println("In the error state.");
-  unsigned char errorString[19] = {'I', 'n', ' ', 't ', 'h', 'e', ' ', 'e', 'r', 'r', 'o', 'r', ' ', 's', 't', 'a', 't', 'e', '.'};
+  unsigned char errorString[19] = {'I', 'n', ' ', 't', 'h', 'e', ' ', 'e', 'r', 'r', 'o', 'r', ' ', 's', 't', 'a', 't', 'e', '.'};
       for(int i = 0; i < 19; i++){
        U0putchar(errorString[i]);
       }
