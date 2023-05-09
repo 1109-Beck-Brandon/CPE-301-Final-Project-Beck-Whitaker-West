@@ -183,9 +183,9 @@ void loop() {
     errorState();
   }
 
-  else{
+  //else{
     //disabledState();
-  }
+  //}
 
 }
 
@@ -203,6 +203,14 @@ void monitorButton(){
   // Update the LED state
   digitalWrite(ledPin, ledState);
   digitalWrite(ledPin2, !ledState);
+
+    if (ledState == HIGH) {
+      progState = 2;;
+    }
+
+    else if (ledState == LOW) {
+      progState = 0;
+    }
 
   // Update the previous button state
   prevButtonState = buttonState;
@@ -225,8 +233,8 @@ void errorState(){
   *portA &=  ~(0x01 << 6); 
 
   //Serial.println("In the error state.");
-  unsigned char errorString[19] = {'I', 'n', ' ', 't', 'h', 'e', ' ', 'e', 'r', 'r', 'o', 'r', ' ', 's', 't', 'a', 't', 'e', '.'};
-      for(int i = 0; i < 19; i++){
+  unsigned char errorString[20] = {'I', 'n', ' ', 't', 'h', 'e', ' ', 'e', 'r', 'r', 'o', 'r', ' ', 's', 't', 'a', 't', 'e', '.', '\n'};
+      for(int i = 0; i < 20; i++){
        U0putchar(errorString[i]);
       }
 }
@@ -247,8 +255,8 @@ void idleState(){
   *portA &=  ~(0x01 << 6); 
 
   //Serial.println("In the idle state.");
-  unsigned char idleString[18] = {'I', 'n', ' ', 't ', 'h', 'e', ' ', 'i', 'd', 'l', 'e', ' ', 's', 't', 'a', 't', 'e', '.'};
-      for(int i = 0; i < 18; i++){
+  unsigned char idleString[19] = {'I', 'n', ' ', 't', 'h', 'e', ' ', 'i', 'd', 'l', 'e', ' ', 's', 't', 'a', 't', 'e', '.', '\n'};
+      for(int i = 0; i < 19; i++){
        U0putchar(idleString[i]);
       }
 }
@@ -263,8 +271,8 @@ void runningState(){
   executeHumiditySensor();
 
   //Serial.println("In the running state.");
-  unsigned char runningString[21] = {'I', 'n', ' ', 't ', 'h', 'e', ' ', 'r', 'u', 'n', 'n', 'i', 'n', 'g', ' ', 's', 't', 'a', 't', 'e', '.'};
-      for(int i = 0; i < 21; i++){
+  unsigned char runningString[22] = {'I', 'n', ' ', 't ', 'h', 'e', ' ', 'r', 'u', 'n', 'n', 'i', 'n', 'g', ' ', 's', 't', 'a', 't', 'e', '.', '\n'};
+      for(int i = 0; i < 22; i++){
        U0putchar(runningString[i]);
       }
 
@@ -296,8 +304,8 @@ void disabledState(){
   *portA |= (0x01 << 6); 
 
   //Serial.println("In the disabled state.");
-  unsigned char disabledString[22] = {'I', 'n', ' ', 't', 'h', 'e', ' ', 'd', 'i', 's', 'a', 'b', 'l', 'e', 'd', ' ', 's', 't', 'a', 't', 'e', '.'};
-      for(int i = 0; i < 2; i++){
+  unsigned char disabledString[23] = {'I', 'n', ' ', 't', 'h', 'e', ' ', 'd', 'i', 's', 'a', 'b', 'l', 'e', 'd', ' ', 's', 't', 'a', 't', 'e', '.', '\n'};
+      for(int i = 0; i < 23; i++){
        U0putchar(disabledString[i]);
       }
 }
@@ -349,9 +357,9 @@ void executeWaterSensor(){
      U0putchar(alert[i]);
      
     }
-     if(buttonState == 0){
+     if(ledState == 0){
        progState = 3;
-       printRTC();
+       //printRTC();
      }
 
      
@@ -388,10 +396,10 @@ void executeHumiditySensor(){
    }
 
    
-   if(DHT.temperature > 50){
-     if(buttonState == 0){
+   if(DHT.temperature > 10){
+     if(ledState == 0){
        progState = 1;
-       printRTC();
+       //printRTC();
      }
    }   
     
