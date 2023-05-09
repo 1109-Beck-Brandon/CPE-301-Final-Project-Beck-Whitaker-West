@@ -198,7 +198,7 @@ void monitorButton(){
   if (buttonState == HIGH && prevButtonState == LOW) {
     // Toggle the state of the LED
     ledState = !ledState;
-  }
+  
 
   // Update the LED state
   digitalWrite(ledPin, ledState);
@@ -211,10 +211,9 @@ void monitorButton(){
     else if (ledState == LOW) {
       progState = 0;
     }
-
+  }
   // Update the previous button state
   prevButtonState = buttonState;
-
 }
 
 void errorState(){
@@ -222,6 +221,11 @@ void errorState(){
   executeWaterSensor();
   executeHumiditySensor();
 
+  digitalWrite(A15, HIGH);
+  digitalWrite(A13, LOW);
+  digitalWrite(A12, LOW);
+  digitalWrite(A14, LOW);
+  
   //Turn on Red LED
   //digitalWrite(22, HIGH);
   *portA |= (0x01 << 0); 
@@ -243,6 +247,8 @@ void idleState(){
   executeWaterSensor();
   executeHumiditySensor();
 
+  digitalWrite(A13, LOW);
+  digitalWrite(A15, LOW);
 
   //Turn on Green LED
   //digitalWrite(22, LOW);
@@ -264,19 +270,26 @@ void idleState(){
 
 void runningState(){
 
-  executeStepperMotor();
+  //executeStepperMotor();
   executeDCMotor();
 
   executeWaterSensor();
   executeHumiditySensor();
 
   //Serial.println("In the running state.");
-  unsigned char runningString[22] = {'I', 'n', ' ', 't ', 'h', 'e', ' ', 'r', 'u', 'n', 'n', 'i', 'n', 'g', ' ', 's', 't', 'a', 't', 'e', '.', '\n'};
+  unsigned char runningString[22] = {'I', 'n', ' ', 't', 'h', 'e', ' ', 'r', 'u', 'n', 'n', 'i', 'n', 'g', ' ', 's', 't', 'a', 't', 'e', '.', '\n'};
       for(int i = 0; i < 22; i++){
        U0putchar(runningString[i]);
       }
 
-  //Turn on Blue LED
+  digitalWrite(A13, HIGH);
+  digitalWrite(A15, LOW);
+  digitalWrite(A12, LOW);
+  digitalWrite(A14, LOW);
+  
+
+
+  ///Turn on Blue LED
   //digitalWrite(22, LOW);
   *portA &=  ~(0x01 << 0); 
   //digitalWrite(24, LOW);
@@ -290,8 +303,8 @@ void runningState(){
 
 void disabledState(){
 
-
-
+  digitalWrite(A13, LOW);
+  digitalWrite(A15, LOW);
 
   //Turn on Yellow LED
   //digitalWrite(22, LOW);
@@ -319,18 +332,17 @@ void disabledState(){
 void executeStepperMotor(){
  //Execution for Stepper Motor
   // read the value from the sensor
-  sensorValue = analogRead(A0);
+  sensorValue = adc_read(0);
+  
+  myStepper.setSpeed(10);
+    myStepper.step(-stepsPerRevolution);
   
   if(sensorValue <= 50) {
     // Rotate CW slowly at 5 RPM
     myStepper.setSpeed(10);
     myStepper.step(stepsPerRevolution);
   }
-  else if(sensorValue >= 1000) {
-    //Rotate CCW quickly at 10 RPM
-    myStepper.setSpeed(10);
-    myStepper.step(-stepsPerRevolution);
-  }
+  
 
 }
 
@@ -352,7 +364,7 @@ void executeWaterSensor(){
 
   unsigned char alert[25] = {'W','A', 'R','N','I','N','G',':',' ','W','A','T','E','R',' ','L','E','V','E','L',' ','L','O','W','\n'};
    
-   if(value < 100) {
+   if(value < 50) {
     for(int i = 0; i < 25; i++){
      U0putchar(alert[i]);
      
@@ -374,10 +386,10 @@ void executeDCMotor(){
  //Execution code for DC Motor
   *portDDRG &= ~(0x01 << 5);
   *portDDRE |= (0x01 << 5);
-  /*analogWrite(speedPin, 255); // HOW DO YOU CONVERT THIS????
+  analogWrite(speedPin, 25500); // HOW DO YOU CONVERT THIS????
   delay(25);
   analogWrite(speedPin, mSpeed); //CONVERT INTO ADC FUNCTION LATER
-  delay(5000);*/
+  delay(5000);
 }
 
 void executeHumiditySensor(){
@@ -396,7 +408,7 @@ void executeHumiditySensor(){
    }
 
    
-   if(DHT.temperature > 10){
+   if(DHT.temperature > 100){
      if(ledState == 0){
        progState = 1;
        //printRTC();
